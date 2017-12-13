@@ -1,0 +1,66 @@
+[
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Dhidapi",
+            "-fPIC",
+            "-o",
+            "lib/libg610.so",
+            "src/device.c"
+        ],
+        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "file": "src/device.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Dhidapi",
+            "-fPIC",
+            "-o",
+            "lib/libg610.so",
+            "src/writer.c"
+        ],
+        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "file": "src/writer.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Dhidapi",
+            "-fPIC",
+            "-o",
+            "lib/libg610.so",
+            "src/key.c"
+        ],
+        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "file": "src/key.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Dhidapi",
+            "-o",
+            "bin/g610",
+            "src/main.c"
+        ],
+        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "file": "src/main.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-Dhidapi",
+            "-fPIC",
+            "-o",
+            "lib/libg610.so",
+            "src/reader.c"
+        ],
+        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "file": "src/reader.c"
+    }
+]
