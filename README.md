@@ -17,7 +17,7 @@ make bin
 or
 
 ```bash
-    make
+make
 ```
 
 The runnable (`bin/gkbd`) lights up each key you press. The led then fades away quickly. Every time you press a key, the G logo lights up
