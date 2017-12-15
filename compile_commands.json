@@ -6,10 +6,10 @@
             "-Dhidapi",
             "-fPIC",
             "-o",
-            "lib/libg610.so",
+            "lib/libgkbd.so",
             "src/device.c"
         ],
-        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "directory": "/media/helvethor/cloud/src/work/c/gkbd",
         "file": "src/device.c"
     },
     {
@@ -19,10 +19,10 @@
             "-Dhidapi",
             "-fPIC",
             "-o",
-            "lib/libg610.so",
+            "lib/libgkbd.so",
             "src/writer.c"
         ],
-        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "directory": "/media/helvethor/cloud/src/work/c/gkbd",
         "file": "src/writer.c"
     },
     {
@@ -32,10 +32,10 @@
             "-Dhidapi",
             "-fPIC",
             "-o",
-            "lib/libg610.so",
+            "lib/libgkbd.so",
             "src/key.c"
         ],
-        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "directory": "/media/helvethor/cloud/src/work/c/gkbd",
         "file": "src/key.c"
     },
     {
@@ -44,10 +44,10 @@
             "-c",
             "-Dhidapi",
             "-o",
-            "bin/g610",
+            "bin/gkbd",
             "src/main.c"
         ],
-        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "directory": "/media/helvethor/cloud/src/work/c/gkbd",
         "file": "src/main.c"
     },
     {
@@ -57,10 +57,10 @@
             "-Dhidapi",
             "-fPIC",
             "-o",
-            "lib/libg610.so",
+            "lib/libgkbd.so",
             "src/reader.c"
         ],
-        "directory": "/media/helvethor/cloud/src/work/c/g610",
+        "directory": "/media/helvethor/cloud/src/work/c/gkbd",
         "file": "src/reader.c"
     }
 ]

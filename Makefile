@@ -1,10 +1,10 @@
 CC=gcc
-NAME=g610
+NAME=gkbd
 
 APP_C=src/main.c
 
 LIB_C=src/device.c src/reader.c src/writer.c
-LIB_H=src/g610.h
+LIB_H=src/gkbd.h
 
 LD_FLAGS=-lhidapi-hidraw
 C_FLAGS=-Dhidapi

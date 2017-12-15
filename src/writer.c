@@ -14,11 +14,11 @@ static const uint8_t G610_GROUP_ADDRESS[][8] = {
 };
 
 
-g610_address_group g610_get_address_group(g610_key key) {
+gkbd_address_group gkbd_get_address_group(gkbd_key key) {
 	return key >> 8;
 }
 
-size_t g610_address_group_addrcpy(g610_address_group address_group, uint8_t * buffer, size_t length) {
+size_t gkbd_address_group_addrcpy(gkbd_address_group address_group, uint8_t * buffer, size_t length) {
 	if (address_group == ADDRESS_GROUP_GKEYS)
 		return 0;
 	if (length < 8)
@@ -27,15 +27,15 @@ size_t g610_address_group_addrcpy(g610_address_group address_group, uint8_t * bu
 	return 8;
 }
 
-size_t g610_address_group_message_size(g610_address_group address_group) {
+size_t gkbd_address_group_message_size(gkbd_address_group address_group) {
 	if (address_group == ADDRESS_GROUP_LOGO)
 		return 21;
 	return G610_DEV_0_WRITE_MAX_SIZE;
 }
 
 
-g610_led_buffer g610_led_buffer_create(g610_address_group address_group) {
-	g610_led_buffer buffer = {
+gkbd_led_buffer gkbd_led_buffer_create(gkbd_address_group address_group) {
+	gkbd_led_buffer buffer = {
 		.address_group = address_group,
 		.leds_count = 0
 	};
@@ -45,26 +45,26 @@ g610_led_buffer g610_led_buffer_create(g610_address_group address_group) {
 	else
 		buffer.leds_length = 14;
 	
-	buffer.leds = malloc(buffer.leds_length * sizeof(g610_led));
+	buffer.leds = malloc(buffer.leds_length * sizeof(gkbd_led));
 	if (buffer.leds == NULL)
 		buffer.leds_length = 0;
 
 	return buffer;
 }
 
-void g610_led_buffer_destroy(g610_led_buffer * buffer) {
+void gkbd_led_buffer_destroy(gkbd_led_buffer * buffer) {
 	if (buffer->leds != NULL)
 		free(buffer->leds);
 	buffer->leds_length = 0;
 }
 
-bool g610_commit(g610_device * g610_device) {
-	if (hid_write(g610_device->dev_0, G610_COMMIT, sizeof(G610_COMMIT) / sizeof(uint8_t)) < 0)
+bool gkbd_commit(gkbd_device * gkbd_device) {
+	if (hid_write(gkbd_device->dev_0, G610_COMMIT, sizeof(G610_COMMIT) / sizeof(uint8_t)) < 0)
 		return false;
 	return true;
 }
 
-bool g610_write_led_buffer(g610_device * device, g610_led_buffer * led_buffer) {
+bool gkbd_write_led_buffer(gkbd_device * device, gkbd_led_buffer * led_buffer) {
 	bool result = true;
 	int res;
 	size_t length = 1;
@@ -73,7 +73,7 @@ bool g610_write_led_buffer(g610_device * device, g610_led_buffer * led_buffer) {
 	if (led_buffer->leds_count <= 0)
 		return true;
 
-	length += g610_address_group_addrcpy(led_buffer->address_group,
+	length += gkbd_address_group_addrcpy(led_buffer->address_group,
 		buffer + length, G610_DEV_0_WRITE_MAX_SIZE - length);
 
 	for (int i = 0; i < led_buffer->leds_count; i++) {
@@ -84,27 +84,27 @@ bool g610_write_led_buffer(g610_device * device, g610_led_buffer * led_buffer) {
 	}
 
 	if ((res = hid_write(device->dev_0, buffer,
-		g610_address_group_message_size(led_buffer->address_group))) < 0)
+		gkbd_address_group_message_size(led_buffer->address_group))) < 0)
 		return false;
 	return true;
 }
 
-bool g610_write_leds(g610_device * device, g610_led * leds, size_t length) {
+bool gkbd_write_leds(gkbd_device * device, gkbd_led * leds, size_t length) {
 	if (length < 1) return true;
 	bool result = true;
-	g610_led_buffer logo_buffer = g610_led_buffer_create(ADDRESS_GROUP_LOGO);
-	g610_led_buffer indicators_buffer = g610_led_buffer_create(ADDRESS_GROUP_INDICATORS);
-	g610_led_buffer multimedia_buffer = g610_led_buffer_create(ADDRESS_GROUP_MULTIMEDIA);
-	g610_led_buffer gkeys_buffer = g610_led_buffer_create(ADDRESS_GROUP_GKEYS);
-	g610_led_buffer keys_buffer = g610_led_buffer_create(ADDRESS_GROUP_KEYS);
+	gkbd_led_buffer logo_buffer = gkbd_led_buffer_create(ADDRESS_GROUP_LOGO);
+	gkbd_led_buffer indicators_buffer = gkbd_led_buffer_create(ADDRESS_GROUP_INDICATORS);
+	gkbd_led_buffer multimedia_buffer = gkbd_led_buffer_create(ADDRESS_GROUP_MULTIMEDIA);
+	gkbd_led_buffer gkeys_buffer = gkbd_led_buffer_create(ADDRESS_GROUP_GKEYS);
+	gkbd_led_buffer keys_buffer = gkbd_led_buffer_create(ADDRESS_GROUP_KEYS);
 
-	g610_led_buffer * buffer;
-	g610_led remaining_leds[length];
+	gkbd_led_buffer * buffer;
+	gkbd_led remaining_leds[length];
 	size_t remaining_count = 0;
 
 	for (int i = 0; i < length; i++) {
 
-		switch (g610_get_address_group(leds[i].key)) {
+		switch (gkbd_get_address_group(leds[i].key)) {
 		case ADDRESS_GROUP_LOGO:
 			buffer = &logo_buffer;
 			break;
@@ -130,26 +130,26 @@ bool g610_write_leds(g610_device * device, g610_led * leds, size_t length) {
 		}
 	}
 
-	result &= g610_write_led_buffer(device, &logo_buffer);
-	result &= g610_write_led_buffer(device, &indicators_buffer);
-	result &= g610_write_led_buffer(device, &multimedia_buffer);
-	result &= g610_write_led_buffer(device, &gkeys_buffer);
-	result &= g610_write_led_buffer(device, &keys_buffer);
-	result &= g610_commit(device);
+	result &= gkbd_write_led_buffer(device, &logo_buffer);
+	result &= gkbd_write_led_buffer(device, &indicators_buffer);
+	result &= gkbd_write_led_buffer(device, &multimedia_buffer);
+	result &= gkbd_write_led_buffer(device, &gkeys_buffer);
+	result &= gkbd_write_led_buffer(device, &keys_buffer);
+	result &= gkbd_commit(device);
 
-	g610_led_buffer_destroy(&logo_buffer);
-	g610_led_buffer_destroy(&indicators_buffer);
-	g610_led_buffer_destroy(&multimedia_buffer);
-	g610_led_buffer_destroy(&gkeys_buffer);
-	g610_led_buffer_destroy(&keys_buffer);
+	gkbd_led_buffer_destroy(&logo_buffer);
+	gkbd_led_buffer_destroy(&indicators_buffer);
+	gkbd_led_buffer_destroy(&multimedia_buffer);
+	gkbd_led_buffer_destroy(&gkeys_buffer);
+	gkbd_led_buffer_destroy(&keys_buffer);
 
-	g610_write_leds(device, remaining_leds, remaining_count);
+	gkbd_write_leds(device, remaining_leds, remaining_count);
 
 	return result;
 }
 
-bool g610_write_led(g610_device * g610_device, g610_led led) {
-	return g610_write_leds(g610_device, &led, 1);
+bool gkbd_write_led(gkbd_device * gkbd_device, gkbd_led led) {
+	return gkbd_write_leds(gkbd_device, &led, 1);
 }
 
 

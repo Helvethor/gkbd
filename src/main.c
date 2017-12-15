@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "hidapi/hidapi.h"
-#include "g610.h"
+#include "gkbd.h"
 
 
 #define EVENTS_MAX_SIZE 128
@@ -30,7 +30,7 @@ bool timespec_gt(struct timespec * a, struct timespec * b) {
 }
 
 typedef struct led_event {
-	g610_led led;
+	gkbd_led led;
 	bool active;
 	uint8_t decrement;
 	struct timespec last_clock;
@@ -69,7 +69,7 @@ void led_event_buffer_destroy(led_event_buffer * buffer) {
 }
 
 
-led_event * led_event_find_event(led_event_buffer * buffer, g610_key key) {
+led_event * led_event_find_event(led_event_buffer * buffer, gkbd_key key) {
 	led_event * event = NULL;
 	size_t i;
 
@@ -88,7 +88,7 @@ led_event * led_event_find_event(led_event_buffer * buffer, g610_key key) {
 	return event;
 }
 
-bool led_event_set_led(led_event_buffer * buffer, g610_led led,
+bool led_event_set_led(led_event_buffer * buffer, gkbd_led led,
 	uint8_t decrement, struct timespec step_duration) {
 	struct timespec now;
 
@@ -107,12 +107,12 @@ bool led_event_set_led(led_event_buffer * buffer, g610_led led,
 }
 
 
-bool led_event_update(led_event_buffer * buffer, g610_device * device) {
+bool led_event_update(led_event_buffer * buffer, gkbd_device * device) {
 	size_t i, leds_count = 0;
 	led_event * event;
 	struct timespec now, elapsed_time;
-	g610_led * led;
-	g610_led leds[buffer->count];
+	gkbd_led * led;
+	gkbd_led leds[buffer->count];
 
 	for (i = 0; i < buffer->count; i++) {
 		event = buffer->events + i;
@@ -139,7 +139,7 @@ bool led_event_update(led_event_buffer * buffer, g610_device * device) {
 		}
 	}
 
-	return g610_write_leds(device, leds, leds_count);
+	return gkbd_write_leds(device, leds, leds_count);
 }
 
 
@@ -149,9 +149,9 @@ int main(int argc, char* argv[]) {
 	struct hid_device_info *devs, *dev;
 	struct timespec step_duration, work_duration, sleep_duration;
 	struct timespec update_duration, update_start, update_end;
-	g610_key keys[G610_READ_MAX_SIZE];
-	g610_led led;
-	g610_device * g610;
+	gkbd_key keys[G610_READ_MAX_SIZE];
+	gkbd_led led;
+	gkbd_device * gkbd;
 	led_event_buffer * events_buffer;
 
 	res = hid_init();
@@ -160,9 +160,9 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	g610 = g610_open();
-	if (!g610) {
-		fprintf(stderr, "Couldn't open g610\n");
+	gkbd = gkbd_open();
+	if (!gkbd) {
+		fprintf(stderr, "Couldn't open gkbd\n");
 		return -1;
 	}
 	
@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
 	while (true) {
 
 		clock_gettime(CLOCK_MONOTONIC, &update_start);
-		res = g610_read_keys(g610, keys, G610_READ_MAX_SIZE);
+		res = gkbd_read_keys(gkbd, keys, G610_READ_MAX_SIZE);
 
 		step_duration.tv_sec = 0;
 		step_duration.tv_nsec = NANOSEC_PER_SEC / 100;
@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
 			led_event_set_led(events_buffer, led, 0xff, step_duration);
 		}
 
-		led_event_update(events_buffer, g610);
+		led_event_update(events_buffer, gkbd);
 		clock_gettime(CLOCK_MONOTONIC, &update_end);
 		work_duration = timespec_diff(&update_end, &update_start);
 		sleep_duration = timespec_diff(&update_duration, &work_duration);
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	led_event_buffer_destroy(events_buffer);
-	g610_close(g610);
+	gkbd_close(gkbd);
 	hid_exit();
 
 	return 0;

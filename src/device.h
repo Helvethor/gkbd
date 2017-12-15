@@ -1,11 +1,11 @@
 #pragma once
 
-#include "g610.h"
+#include "gkbd.h"
 #include "reader.h"
 
-typedef struct g610_device {
+typedef struct gkbd_device {
 	hid_device * dev_0;
 	hid_device * dev_1;
-	g610_reader * reader_0;
-	g610_reader * reader_1;
-} g610_device;
+	gkbd_reader * reader_0;
+	gkbd_reader * reader_1;
+} gkbd_device;
