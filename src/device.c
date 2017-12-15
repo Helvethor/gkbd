@@ -1,4 +1,5 @@
 #include "device.h"
+#include "reader.h"
 
 g610_device * g610_open() {
 
@@ -34,8 +35,15 @@ g610_device * g610_open() {
 }
 
 void g610_close(g610_device * device) {
+
+	if (device->reader_0)
+		g610_reader_destroy(device->reader_0);
+	if (device->reader_1)
+		g610_reader_destroy(device->reader_1);
+
 	hid_close(device->dev_0);
 	hid_close(device->dev_1);
+
 	free(device);
 }
 

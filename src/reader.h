@@ -2,7 +2,6 @@
 
 #include <pthread.h>
 #include "g610.h"
-#include "key.h"
 
 
 typedef struct g610_reader {
@@ -12,3 +11,5 @@ typedef struct g610_reader {
 	pthread_t * thread;
 	pthread_mutex_t mutex;
 } g610_reader;
+
+void g610_reader_destroy(g610_reader * reader);

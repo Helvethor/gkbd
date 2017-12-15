@@ -6,7 +6,7 @@
 #define G610_DEV_1_READ_MAX_SIZE 64
 
 
-bool g610_create_reader(g610_reader * reader, hid_device * dev, void * read_function) {
+bool g610_reader_create(g610_reader * reader, hid_device * dev, void * read_function) {
 	if (reader->thread)
 		return false;
 	reader->thread = malloc(sizeof(pthread_t));
@@ -48,6 +48,8 @@ void * g610_reader_read_0(void * arg) {
 		}
 
 		for (int i = 2; i < hid_count; i++) {
+			if (!hid_buffer[i])
+				break;
 			key_buffer[keys_count++] = ADDRESS_GROUP_KEYS << 8 | hid_buffer[i];
 		}
 
@@ -70,12 +72,14 @@ void * g610_reader_read_1(void * arg) {
 
 	while (true) {
 		hid_count = hid_read(reader->dev, hid_buffer, G610_DEV_1_READ_MAX_SIZE);
-		keys_count = 0;
 
 		if (hid_buffer[0] != 0x01)
 			continue;
 
+		keys_count = 0;
 		for (int i = 1; i < hid_count - 1; i++) {
+			if (!hid_buffer[i])
+				break;
 			key_buffer[keys_count++] = ADDRESS_GROUP_KEYS << 8 | hid_buffer[i];
 		}
 
@@ -88,14 +92,14 @@ void * g610_reader_read_1(void * arg) {
 	return NULL;
 }
 
-size_t g610_get_keys(g610_device * device, g610_key * keys, size_t length) {
+size_t g610_read_keys(g610_device * device, g610_key * keys, size_t length) {
 	g610_reader * reader;
 	size_t count_0 = 0;
 	size_t count_1 = 0;
 
 	if (!device->reader_0) {
 		device->reader_0 = calloc(1, sizeof(g610_reader));
-		g610_create_reader(device->reader_0, device->dev_0, g610_reader_read_0);
+		g610_reader_create(device->reader_0, device->dev_0, g610_reader_read_0);
 		if (!device->reader_0->thread) {
 			g610_reader_destroy(device->reader_0);
 			device->reader_0 = NULL;
@@ -105,7 +109,7 @@ size_t g610_get_keys(g610_device * device, g610_key * keys, size_t length) {
 	}
 	if (!device->reader_1) {
 		device->reader_1 = calloc(1, sizeof(g610_reader));
-		g610_create_reader(device->reader_1, device->dev_1, g610_reader_read_1);
+		g610_reader_create(device->reader_1, device->dev_1, g610_reader_read_1);
 		if (!device->reader_1->thread) {
 			g610_reader_destroy(device->reader_1);
 			device->reader_1 = NULL;

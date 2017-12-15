@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef G610_H
-#define G610_H
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -146,27 +143,15 @@ static const g610_key G610_KEY_GROUP_MODIFIERS[] = {
 };
 
 
-typedef enum g610_address_group_start {
-	ADDRESS_GROUP_LOGO_START = KEY_LOGO,
-	ADDRESS_GROUP_INDICATORS_START = KEY_BACKLIGHT,
-	ADDRESS_GROUP_GKEYS_START = KEY_G1,
-	ADDRESS_GROUP_KEYS_START = KEY_A,
-	ADDRESS_GROUP_MODIFIERS_START = KEY_CTRL_LEFT
-} g610_address_group_start;
-
-
 typedef struct g610_led {
 	g610_key key;
 	uint8_t intensity;
 } g610_led;
 
 
-
 g610_device * g610_open();
 void g610_close(g610_device * device);
-g610_address_group g610_get_key_group(g610_key key);
-bool g610_set_led(g610_device * device, g610_led led);
-bool g610_set_leds(g610_device * device, g610_led * leds, size_t length);
-size_t g610_get_keys(g610_device * device, g610_key * keys, size_t length);
-
-#endif // G610_H
+g610_address_group g610_get_address_group(g610_key key);
+bool g610_write_led(g610_device * device, g610_led led);
+bool g610_write_leds(g610_device * device, g610_led * leds, size_t length);
+size_t g610_read_keys(g610_device * device, g610_key * keys, size_t length);

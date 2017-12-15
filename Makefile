@@ -3,7 +3,7 @@ NAME=g610
 
 APP_C=src/main.c
 
-LIB_C=src/device.c src/key.c src/reader.c src/writer.c
+LIB_C=src/device.c src/reader.c src/writer.c
 LIB_H=src/g610.h
 
 LD_FLAGS=-lhidapi-hidraw
