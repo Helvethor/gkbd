@@ -19,7 +19,7 @@ bin/$(NAME): $(APP_C) $(LIB_C) $(LIB_H)
 
 bin-linked: $(APP_C) lib
 	@mkdir -p bin
-	$(CC) $(APP_C) $(C_FLAGS) $(LD_FLAGS) -l$(NAME) -o bin/$(NAME)
+	$(CC) $(APP_C) $(C_FLAGS) $(LD_FLAGS) -l$(NAME) -L./lib -o bin/$(NAME)
 
 lib: lib/lib$(NAME).so
 
