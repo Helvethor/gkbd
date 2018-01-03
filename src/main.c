@@ -190,10 +190,12 @@ int main(int argc, char* argv[]) {
 
 		step_duration.tv_sec = 0;
 		step_duration.tv_nsec = 0;
-		if (res > 0) {
-			led.key = KEY_LOGO;
-			led_event_set_led(events_buffer, led, 0xff, step_duration);
-		}
+		led.key = KEY_LOGO;
+		if (res > 0)
+		    led.intensity = 0xff;
+        else
+		    led.intensity = 0x00;
+        led_event_set_led(events_buffer, led, 0xff, step_duration);
 
 		led_event_update(events_buffer, gkbd);
 		clock_gettime(CLOCK_MONOTONIC, &update_end);
