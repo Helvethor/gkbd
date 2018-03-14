@@ -143,6 +143,36 @@ static const gkbd_key G610_KEY_GROUP_MODIFIERS[] = {
 };
 
 
+static const gkbd_key * G610_KEY_GROUPS[] = {
+    G610_KEY_GROUP_LOGO,
+    G610_KEY_GROUP_INDICATORS,
+    G610_KEY_GROUP_MULTIMEDIA,
+    G610_KEY_GROUP_GKEYS,
+    G610_KEY_GROUP_KEYS,
+    G610_KEY_GROUP_DIGITS,
+    G610_KEY_GROUP_TYPING,
+    G610_KEY_GROUP_FUNCTION,
+    G610_KEY_GROUP_PAGE,
+    G610_KEY_GROUP_ARROWS,
+    G610_KEY_GROUP_NUMPAD,
+    G610_KEY_GROUP_MODIFIERS
+};
+
+static const uint32_t G610_KEY_GROUPS_LENGTH[] = {
+    sizeof(G610_KEY_GROUP_LOGO) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_INDICATORS) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_MULTIMEDIA) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_GKEYS) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_KEYS) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_DIGITS) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_TYPING) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_FUNCTION) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_PAGE) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_ARROWS) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_NUMPAD) / sizeof(gkbd_key),
+    sizeof(G610_KEY_GROUP_MODIFIERS) / sizeof(gkbd_key)
+};
+
 typedef struct gkbd_led {
 	gkbd_key key;
 	uint8_t intensity;

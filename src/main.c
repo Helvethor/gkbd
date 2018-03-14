@@ -146,6 +146,7 @@ bool led_event_update(led_event_buffer * buffer, gkbd_device * device) {
 int main(int argc, char* argv[]) {
 	int res, i;
 	size_t event_count = 0;
+    bool result;
 	struct hid_device_info *devs, *dev;
 	struct timespec step_duration, work_duration, sleep_duration;
 	struct timespec update_duration, update_start, update_end;
@@ -173,6 +174,26 @@ int main(int argc, char* argv[]) {
 	}
 
 	update_duration.tv_sec = 0;
+	update_duration.tv_nsec = 0;
+
+    for (int i = 0; i < sizeof(G610_KEY_GROUPS) / sizeof(gkbd_key *); i++) {
+        for (int j = 0; j < G610_KEY_GROUPS_LENGTH[i]; j++) {
+
+            led.key = G610_KEY_GROUPS[i][j];
+            if (G610_KEY_GROUPS[i] == G610_KEY_GROUP_INDICATORS
+                || G610_KEY_GROUPS[i] == G610_KEY_GROUP_MULTIMEDIA
+                || G610_KEY_GROUPS[i] == G610_KEY_GROUP_LOGO)
+            {
+                led.intensity = 0xff;
+            }
+            else {
+                led.intensity = 0x00;
+            }
+
+            gkbd_write_led(gkbd, led);
+        }
+    }
+
 	update_duration.tv_nsec = NANOSEC_PER_SEC / 1000;
 	led.intensity = 0xff;
 
